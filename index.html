@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U War Tracker - World + Nigeria Live</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0f172a;color:#fff;padding:12px}
+header{background:#dc2626;padding:16px;border-radius:12px;text-align:center;margin-bottom:12px}
+header h1{font-size:24px}header p{opacity:.9;font-size:13px;margin-top:4px}
+.live{display:inline-block;background:#fff;color:#dc2626;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:bold;margin-top:8px}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;padding:12px;border:none;border-radius:10px;background:#1e293b;color:#fff;font-weight:bold;cursor:pointer}
+.tabs button.active{background:#dc2626}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.card{background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid #334155}
+.card-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:50px;background:linear-gradient(135deg,#dc2626,#7f1d1d)}
+.card-body{padding:12px}
+.card-body h3{font-size:16px;margin-bottom:6px}
+.card-body p{font-size:13px;color:#cbd5e1;line-height:1.5}
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold;margin-bottom:8px}
+.high{background:#dc2626}.med{background:#f59e0b;color:#000}.low{background:#22c55e;color:#000}
+footer{text-align:center;padding:16px;font-size:12px;color:#94a3b8}
+input{width:100%;padding:12px;border-radius:10px;border:none;margin-bottom:12px;background:#1e293b;color:#fff}
+</style>
+</head>
+<body>
+<header>
+<h1>🌍 U WAR TRACKER</h1>
+<p>World + Nigeria Conflicts - Live Updates</p>
+<div class="live">● LIVE • Updated: <span id="time"></span></div>
+</header>
+<input id="search" placeholder="🔍 Search war, country, city... e.g. Gaza, Ukraine, Borno" oninput="filterCards()">
+<div class="tabs">
+<button class="active" onclick="showTab('all',this)">ALL</button>
+<button onclick="showTab('world',this)">WORLD</button>
+<button onclick="showTab('nigeria',this)">NIGERIA 🇳🇬</button>
+</div>
+<div class="grid" id="grid"></div>
+<footer>U War Tracker • Data from public news sources • Refresh for latest • Built by Frank</footer>
+<script>
+const data=[
+{cat:'world',title:'🇵🇸 Gaza - Israel War',level:'HIGH',emoji:'💥',desc:'Ongoing fighting in Gaza. Airstrikes and ground operations continue. Humanitarian situation remains critical. Thousands displaced.'},
+{cat:'world',title:'🇺🇦 Ukraine - Russia War',level:'HIGH',emoji:'🪖',desc:'War in Eastern Ukraine continues. Drone strikes, frontline battles in Donetsk and Kharkiv. International aid ongoing.'},
+{cat:'world',title:'🇱🇧 Lebanon - Israel Tensions',level:'MEDIUM',emoji:'🚀',desc:'Border tensions and airstrikes in southern Lebanon. Ceasefire efforts ongoing but fragile.'},
+{cat:'world',title:'🇸🇩 Sudan Civil War',level:'HIGH',emoji:'⚠️',desc:'Civil war between army and RSF. Khartoum and Darfur worst hit. Millions displaced, food crisis worsening.'},
+{cat:'world',title:'🇲🇲 Myanmar Conflict',level:'MEDIUM',emoji:'🔥',desc:'Fighting between military and resistance groups continues across Shan, Rakhine and Kachin states.'},
+{cat:'world',title:'🇾🇪 Yemen Conflict',level:'MEDIUM',emoji:'🚢',desc:'Houthi attacks in Red Sea affecting shipping. Internal conflict continues despite peace talks.'},
+{cat:'nigeria',title:'🇳🇬 Borno - Boko Haram / ISWAP',level:'HIGH',emoji:'🎯',desc:'Insurgency in North-East. Attacks around Maiduguri, Bama, Gwoza. Military operations ongoing.'},
+{cat:'nigeria',title:'🇳🇬 Zamfara - Banditry',level:'HIGH',emoji:'🏍️',desc:'Bandit attacks, kidnappings in Zamfara, Katsina, Sokoto. Communities under pressure, security operations ongoing.'},
+{cat:'nigeria',title:'🇳🇬 Benue / Plateau - Herders Crisis',level:'MEDIUM',emoji:'🌾',desc:'Farmer-herder clashes in Middle Belt. Attacks on villages in Benue, Plateau, Nasarawa. Displacement camps growing.'},
+{cat:'nigeria',title:'🇳🇬 South-East - IPOB / Unknown Gunmen',level:'MEDIUM',emoji:'🚧',desc:'Sit-at-home, attacks on security posts in Imo, Anambra, Enugu. Security tension remains.'},
+{cat:'nigeria',title:'🇳🇬 Niger Delta - Oil / Militancy',level:'LOW',emoji:'🛢️',desc:'Oil theft and pipeline vandalism in Rivers, Delta, Bayelsa. Amnesty and surveillance ongoing.'},
+{cat:'nigeria',title:'🇳🇬 Lagos / Abuja - Security Watch',level:'LOW',emoji:'🏙️',desc:'Generally calm. Police patrols, kidnapping alerts on highways. Stay alert at night.'},
+];
+function render(list){
+document.getElementById('grid').innerHTML=list.map(d=>`
+<div class="card"><div class="card-img">${d.emoji}</div><div class="card-body"><span class="badge ${d.level==='HIGH'?'high':d.level==='MEDIUM'?'med':'low'}">${d.level} RISK</span><h3>${d.title}</h3><p>${d.desc}</p><p style="margin-top:8px;color:#f87171;font-weight:bold">Last Update: Today • Source: Public News</p></div></div>`).join('');
+}
+function showTab(cat,btn){
+document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+render(cat==='all'?data:data.filter(d=>d.cat===cat));
+}
+function filterCards(){
+let q=document.getElementById('search').value.toLowerCase();
+render(data.filter(d=>(d.title+d.desc).toLowerCase().includes(q)));
+}
+document.getElementById('time').innerText=new Date().toLocaleString();
+render(data);
+</script>
+</body>
+</html>
